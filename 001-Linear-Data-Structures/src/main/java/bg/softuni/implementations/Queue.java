@@ -34,11 +34,9 @@ public class Queue<E> implements AbstractQueue<E> {
 
         var first = this.data[this.front];
 
-        if (this.size() >= 0) {
-            System.arraycopy(data, 1, data, 0, this.size());
-        }
-
+        System.arraycopy(data, 1, data, 0, this.size - 1);
         this.size--;
+        this.data[this.size] = null;
         return first;
     }
 
@@ -79,7 +77,7 @@ public class Queue<E> implements AbstractQueue<E> {
 
         @Override
         public boolean hasNext() {
-            return index == size();
+            return index < size();
         }
 
         @Override

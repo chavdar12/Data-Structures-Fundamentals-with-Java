@@ -20,4 +20,9 @@ public class CookiesProblemTest {
         assertNotNull(result);
         assertEquals(Integer.valueOf(-1), result);
     }
+
+    @Test
+    public void testSolveEmptyInput() {
+        assertEquals(Integer.valueOf(-1), new CookiesProblem().solve(1, new int[0]));
+    }
 }

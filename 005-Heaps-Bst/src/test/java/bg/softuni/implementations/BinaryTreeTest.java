@@ -27,12 +27,12 @@ public class BinaryTreeTest {
     public void testAsIndentedPreOrder() {
         String indentedPreOrder = this.tree.asIndentedPreOrder(0);
         assertEquals(
-                "17\r\n" +
-                        "  9\r\n" +
-                        "    3\r\n" +
-                        "    11\r\n" +
-                        "  25\r\n" +
-                        "    20\r\n" +
+                "17" + System.lineSeparator() +
+                        "  9" + System.lineSeparator() +
+                        "    3" + System.lineSeparator() +
+                        "    11" + System.lineSeparator() +
+                        "  25" + System.lineSeparator() +
+                        "    20" + System.lineSeparator() +
                         "    31", indentedPreOrder);
     }
 

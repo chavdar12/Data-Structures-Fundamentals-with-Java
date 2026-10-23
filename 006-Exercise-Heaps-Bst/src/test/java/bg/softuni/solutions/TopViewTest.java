@@ -32,4 +32,17 @@ public class TopViewTest {
             assertEquals(expected[i], list.get(i));
         }
     }
+
+    @Test
+    public void testShallowerNodeWinsOverDeeperLeftSubtreeNode() {
+        BinaryTree binaryTree =
+                new BinaryTree(1,
+                        new BinaryTree(2, null,
+                                new BinaryTree(4, null,
+                                        new BinaryTree(5, null,
+                                                new BinaryTree(6, null, null)))),
+                        new BinaryTree(3, null, null));
+
+        assertEquals(List.of(2, 1, 3, 6), binaryTree.topView());
+    }
 }

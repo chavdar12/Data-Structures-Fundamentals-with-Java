@@ -48,9 +48,9 @@ public class BalancedParentheses implements Solvable {
                 continue;
             }
 
-            String openingBracket = stack.pop();
+            if (stack.isEmpty()) return false;
 
-            if (openingBracket == null) return false;
+            String openingBracket = stack.pop();
 
             String closingBracket = brackets.get(openingBracket);
 

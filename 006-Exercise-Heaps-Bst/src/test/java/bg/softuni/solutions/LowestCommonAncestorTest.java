@@ -3,6 +3,7 @@ package bg.softuni.solutions;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class LowestCommonAncestorTest {
 
@@ -17,5 +18,12 @@ public class LowestCommonAncestorTest {
                                         new BinaryTree(13, null, null))));
 
         assertEquals(Integer.valueOf(14), binaryTree.findLowestCommonAncestor(23, 13));
+    }
+
+    @Test
+    public void testMissingNodeReturnsNull() {
+        BinaryTree binaryTree = new BinaryTree(7, new BinaryTree(21, null, null), null);
+
+        assertNull(binaryTree.findLowestCommonAncestor(21, 99));
     }
 }

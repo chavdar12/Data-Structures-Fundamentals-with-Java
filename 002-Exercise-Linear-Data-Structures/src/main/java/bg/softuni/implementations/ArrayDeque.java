@@ -3,6 +3,7 @@ package bg.softuni.implementations;
 import bg.softuni.interfaces.Deque;
 
 import java.util.Iterator;
+import java.util.Objects;
 
 public class ArrayDeque<E> implements Deque<E> {
 
@@ -50,7 +51,7 @@ public class ArrayDeque<E> implements Deque<E> {
     }
 
     private void grow() {
-        E[] newElements = (E[]) new Object[this.elements.length * GROWTH_FACTOR];
+        E[] newElements = (E[]) new Object[Math.max(INITIAL_CAPACITY, this.elements.length * GROWTH_FACTOR)];
         this.copyAllElements(newElements);
         this.elements = newElements;
         this.head = 0;
@@ -97,22 +98,18 @@ public class ArrayDeque<E> implements Deque<E> {
     }
 
     private void insertAtMiddle(int index, E element) {
-        int currentIndex = this.head;
-        for (int i = 0; i < index; i++) {
-            currentIndex = this.getNextIndex(currentIndex);
+        this.addLast(this.get(this.size - 1));
+        for (int i = this.size - 2; i > index; i--) {
+            this.set(i, this.get(i - 1));
         }
+        this.set(index, element);
+    }
 
-        int previousIndex = this.getPreviousIndex(currentIndex);
-        int nextIndex = this.getNextIndex(currentIndex);
-
-        E previousElement = this.elements[previousIndex];
-        E nextElement = this.elements[nextIndex];
-
-        this.elements[previousIndex] = element;
-        this.elements[currentIndex] = previousElement;
-        this.elements[nextIndex] = nextElement;
-
-        this.size++;
+    private int physicalIndex(int index) {
+        if (index < 0 || index >= this.size) {
+            throw new IndexOutOfBoundsException("Index " + index + " out of bounds for size " + this.size);
+        }
+        return (this.head + index) % this.elements.length;
     }
 
     private void ensureIndex(int index) {
@@ -123,13 +120,7 @@ public class ArrayDeque<E> implements Deque<E> {
 
     @Override
     public void set(int index, E element) {
-        this.ensureIndex(index);
-        int currentIndex = this.head;
-        for (int i = 0; i < index; i++) {
-            currentIndex = this.getNextIndex(currentIndex);
-        }
-
-        this.elements[currentIndex] = element;
+        this.elements[this.physicalIndex(index)] = element;
     }
 
     @Override
@@ -161,13 +152,7 @@ public class ArrayDeque<E> implements Deque<E> {
 
     @Override
     public E get(int index) {
-        this.ensureIndex(index);
-        int currentIndex = this.head;
-        for (int i = 0; i < index; i++) {
-            currentIndex = this.getNextIndex(currentIndex);
-        }
-
-        return this.elements[currentIndex];
+        return this.elements[this.physicalIndex(index)];
     }
 
     @Override
@@ -183,7 +168,7 @@ public class ArrayDeque<E> implements Deque<E> {
     private int indexOf(Object object) {
         int currentIndex = this.head;
         for (int i = 0; i < this.size; i++) {
-            if (this.elements[currentIndex].equals(object)) {
+            if (Objects.equals(this.elements[currentIndex], object)) {
                 return i;
             }
 
@@ -195,7 +180,7 @@ public class ArrayDeque<E> implements Deque<E> {
 
     @Override
     public E remove(int index) {
-        this.ensureIndex(index);
+        this.physicalIndex(index);
         if (index == 0) {
             return this.poll();
         } else if (index == this.size - 1) {
@@ -206,24 +191,12 @@ public class ArrayDeque<E> implements Deque<E> {
     }
 
     private E removeAtMiddle(int index) {
-        int currentIndex = this.head;
-        for (int i = 0; i < index; i++) {
-            currentIndex = this.getNextIndex(currentIndex);
+        E element = this.get(index);
+        for (int i = index; i < this.size - 1; i++) {
+            this.set(i, this.get(i + 1));
         }
-
-        int previousIndex = this.getPreviousIndex(currentIndex);
-        int nextIndex = this.getNextIndex(currentIndex);
-
-        E previousElement = this.elements[previousIndex];
-        E nextElement = this.elements[nextIndex];
-
-        this.elements[previousIndex] = nextElement;
-        this.elements[nextIndex] = previousElement;
-        this.elements[currentIndex] = null;
-
-        this.size--;
-
-        return previousElement;
+        this.removeLast();
+        return element;
     }
 
     @Override
@@ -282,18 +255,16 @@ public class ArrayDeque<E> implements Deque<E> {
     @Override
     public Iterator<E> iterator() {
         return new Iterator<>() {
-            private int currentIndex = head;
+            private int index = 0;
 
             @Override
             public boolean hasNext() {
-                return currentIndex != tail;
+                return index < size;
             }
 
             @Override
             public E next() {
-                E element = elements[currentIndex];
-                currentIndex = getNextIndex(currentIndex);
-                return element;
+                return get(index++);
             }
         };
     }

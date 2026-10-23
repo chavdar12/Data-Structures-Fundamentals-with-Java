@@ -31,6 +31,9 @@ public class SinglyLinkedList<E> implements LinkedList<E> {
         var newNode = new Node<E>(element);
 
         newNode.setNext(this.node);
+        if (this.node == null) {
+            this.end = newNode;
+        }
 
         this.node = newNode;
 
@@ -72,12 +75,13 @@ public class SinglyLinkedList<E> implements LinkedList<E> {
             throw new IllegalStateException("Empty!");
         }
 
-        var last = this.node;
-        var currentNode = this.node;
+        if (this.node.next == null) {
+            return this.removeFirst();
+        }
 
-        while (currentNode.next != null) {
-            last = currentNode;
-            currentNode = currentNode.next;
+        var last = this.node;
+        while (last.next.next != null) {
+            last = last.next;
         }
 
         E value = last.next.value;

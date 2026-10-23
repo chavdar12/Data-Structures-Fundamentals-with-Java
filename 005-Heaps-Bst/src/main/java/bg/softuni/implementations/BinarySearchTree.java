@@ -5,7 +5,6 @@ import bg.softuni.interfaces.AbstractBinarySearchTree;
 public class BinarySearchTree<E extends Comparable<E>> implements AbstractBinarySearchTree<E> {
 
     private Node<E> root;
-    private boolean isContains;
 
     public BinarySearchTree() {
     }
@@ -49,26 +48,15 @@ public class BinarySearchTree<E extends Comparable<E>> implements AbstractBinary
 
     @Override
     public boolean contains(E element) {
-        containsElement(this.root, element);
-
-        return isContains;
-    }
-
-    private void containsElement(Node<E> root, E element) {
-        if (root == null) {
-            return;
+        Node<E> current = this.root;
+        while (current != null) {
+            int cmp = element.compareTo(current.value);
+            if (cmp == 0) {
+                return true;
+            }
+            current = cmp < 0 ? current.leftChild : current.rightChild;
         }
-
-        if (root.value.compareTo(element) == 0) {
-            this.isContains = true;
-            return;
-        }
-
-        if (element.compareTo(root.value) < 0) {
-            containsElement(root.leftChild, element);
-        } else {
-            containsElement(root.rightChild, element);
-        }
+        return false;
     }
 
     @Override

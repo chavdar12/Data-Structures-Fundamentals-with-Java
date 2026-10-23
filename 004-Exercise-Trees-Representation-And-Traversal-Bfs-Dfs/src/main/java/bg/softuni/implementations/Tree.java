@@ -93,43 +93,29 @@ public class Tree<E> implements AbstractTree<E> {
 
     @Override
     public Tree<E> getDeepestLeftmostNode() {
-        Tree<E> deepestLeftmostNode = this;
-        deepestLeftmostNode = this.getDeepestLeftmostNode(this, deepestLeftmostNode, 0);
-        return deepestLeftmostNode;
+        List<Tree<E>> deepest = new ArrayList<>(List.of(this));
+        int[] maxDepth = {0};
+        this.findDeepest(this, 0, maxDepth, deepest);
+        return deepest.get(0);
     }
 
-    private Tree<E> getDeepestLeftmostNode(Tree<E> eTree, Tree<E> deepestLeftmostNode, int i) {
-        for (Tree<E> child : eTree.children) {
-            if (child.children.isEmpty()) {
-                if (i > deepestLeftmostNode.children.size()) {
-                    deepestLeftmostNode = child;
-                }
-            } else {
-                deepestLeftmostNode = this.getDeepestLeftmostNode(child, deepestLeftmostNode, i + 1);
-            }
+    private void findDeepest(Tree<E> eTree, int depth, int[] maxDepth, List<Tree<E>> deepest) {
+        if (depth > maxDepth[0]) {
+            maxDepth[0] = depth;
+            deepest.set(0, eTree);
         }
-        return deepestLeftmostNode;
+        for (Tree<E> child : eTree.children) {
+            this.findDeepest(child, depth + 1, maxDepth, deepest);
+        }
     }
 
     @Override
     public List<E> getLongestPath() {
         List<E> longestPath = new ArrayList<>();
-        this.getLongestPath(this, longestPath, 0);
-        return longestPath;
-    }
-
-    private void getLongestPath(Tree<E> eTree, List<E> longestPath, int i) {
-        for (Tree<E> child : eTree.children) {
-            if (child.children.isEmpty()) {
-                if (i > longestPath.size()) {
-                    longestPath.clear();
-                    longestPath.add(child.getKey());
-                }
-            } else {
-                longestPath.add(child.getKey());
-                this.getLongestPath(child, longestPath, i + 1);
-            }
+        for (Tree<E> node = this.getDeepestLeftmostNode(); node != null; node = node.parent) {
+            longestPath.add(0, node.getKey());
         }
+        return longestPath;
     }
 
     @Override
@@ -139,35 +125,36 @@ public class Tree<E> implements AbstractTree<E> {
         return pathsWithGivenSum;
     }
 
-    private <E> void pathsWithGivenSum(Tree eTree, List<List<E>> pathsWithGivenSum, ArrayList<E> es, int sum) {
-        for (Object child : eTree.children) {
-            if (((Tree) child).children.isEmpty()) {
-                if (sum == (int) ((Tree) child).getKey()) {
-                    es.add((E) ((Tree<?>) child).getKey());
-                    pathsWithGivenSum.add(new ArrayList<>(es));
-                    es.remove(es.size() - 1);
-                }
-            } else {
-                es.add((E) ((Tree) child).getKey());
-                this.pathsWithGivenSum((Tree) child, pathsWithGivenSum, es, sum - (int) ((Tree) child).getKey());
-                es.remove(es.size() - 1);
+    private void pathsWithGivenSum(Tree<E> eTree, List<List<E>> pathsWithGivenSum, List<E> path, int sum) {
+        path.add(eTree.getKey());
+        int remaining = sum - (int) eTree.getKey();
+        if (eTree.children.isEmpty()) {
+            if (remaining == 0) {
+                pathsWithGivenSum.add(new ArrayList<>(path));
+            }
+        } else {
+            for (Tree<E> child : eTree.children) {
+                this.pathsWithGivenSum(child, pathsWithGivenSum, path, remaining);
             }
         }
+        path.remove(path.size() - 1);
     }
-
 
     @Override
     public List<Tree<E>> subTreesWithGivenSum(int sum) {
         List<Tree<E>> subTreesWithGivenSum = new ArrayList<>();
-        this.subTreesWithGivenSum(this, sum);
+        this.subTreeSum(this, sum, subTreesWithGivenSum);
         return subTreesWithGivenSum;
     }
 
-    private void subTreesWithGivenSum(Tree<E> eTree, int sum) {
+    private int subTreeSum(Tree<E> eTree, int sum, List<Tree<E>> subTreesWithGivenSum) {
+        int total = (int) eTree.getKey();
         for (Tree<E> child : eTree.children) {
-            if (!child.children.isEmpty()) {
-                this.subTreesWithGivenSum(child, sum - (int) child.getKey());
-            }
+            total += this.subTreeSum(child, sum, subTreesWithGivenSum);
         }
+        if (total == sum) {
+            subTreesWithGivenSum.add(eTree);
+        }
+        return total;
     }
 }

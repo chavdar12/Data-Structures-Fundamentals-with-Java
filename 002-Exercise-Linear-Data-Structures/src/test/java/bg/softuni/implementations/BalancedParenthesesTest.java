@@ -20,4 +20,9 @@ public class BalancedParenthesesTest {
         assertNotNull(solve);
         assertFalse(solve);
     }
+
+    @Test
+    public void closingBracketFirstIsNotBalanced() {
+        assertFalse(new BalancedParentheses(")(").solve());
+    }
 }

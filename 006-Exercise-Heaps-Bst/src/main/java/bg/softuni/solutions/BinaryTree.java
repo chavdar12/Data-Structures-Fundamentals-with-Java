@@ -1,8 +1,11 @@
 package bg.softuni.solutions;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class BinaryTree<E extends Comparable<E>> {
     private int value;
@@ -19,6 +22,10 @@ public class BinaryTree<E extends Comparable<E>> {
     public Integer findLowestCommonAncestor(int first, int second) {
         List<Integer> firstPath = findPath(first);
         List<Integer> secondPath = findPath(second);
+
+        if (firstPath.isEmpty() || secondPath.isEmpty()) {
+            return null;
+        }
 
         int smallerSize = Math.min(firstPath.size(), secondPath.size());
 
@@ -62,54 +69,25 @@ public class BinaryTree<E extends Comparable<E>> {
     }
 
     public List<Integer> topView() {
-        List<Integer> result = new ArrayList<>();
-        Map<Integer, Integer> map = new java.util.TreeMap<>();
+        // BFS so the shallowest node at each horizontal offset wins
+        Map<Integer, Integer> map = new TreeMap<>();
+        Deque<BinaryTree> nodes = new ArrayDeque<>(List.of(this));
+        Deque<Integer> offsets = new ArrayDeque<>(List.of(0));
 
-        topView(this, 0, map);
-
-        for (Integer value : map.values()) {
-            result.add(value);
+        while (!nodes.isEmpty()) {
+            BinaryTree node = nodes.poll();
+            int offset = offsets.poll();
+            map.putIfAbsent(offset, node.value);
+            if (node.left != null) {
+                nodes.offer(node.left);
+                offsets.offer(offset - 1);
+            }
+            if (node.right != null) {
+                nodes.offer(node.right);
+                offsets.offer(offset + 1);
+            }
         }
 
-        return result;
-    }
-
-    private void topView(BinaryTree<E> eBinaryTree, int i, Map<Integer, Integer> map) {
-        if (eBinaryTree == null) {
-            return;
-        }
-
-        if (!map.containsKey(i)) {
-            map.put(i, eBinaryTree.value);
-        }
-
-        topView(eBinaryTree.left, i - 1, map);
-        topView(eBinaryTree.right, i + 1, map);
-    }
-
-    private void leftView(List<Integer> result) {
-        if (this.left != null) {
-            this.left.leftView(result);
-        }
-        result.add(this.value);
-    }
-
-    private void traverseTree(BinaryTree binaryTree, int offset, int level, Map<Integer,
-            List<Integer>> map) {
-        if (binaryTree == null) {
-            return;
-        }
-
-        if (!map.containsKey(offset)) {
-            map.put(offset, new ArrayList<>());
-        }
-
-        List<Integer> list = map.get(offset);
-        if (list.size() == level) {
-            list.add(binaryTree.value);
-        }
-
-        traverseTree(binaryTree.left, offset - 1, level + 1, map);
-        traverseTree(binaryTree.right, offset + 1, level + 1, map);
+        return new ArrayList<>(map.values());
     }
 }

@@ -3,6 +3,7 @@ package bg.softuni.implementations;
 import bg.softuni.interfaces.List;
 
 import java.util.Iterator;
+import java.util.Objects;
 
 public class ArrayList<E> implements List<E> {
     private E[] arr;
@@ -26,33 +27,16 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public boolean add(int index, E element) {
-        if (!isValidIndex(index)) {
+        if (index < 0 || index > this.length) {
             throw new IndexOutOfBoundsException("Invalid index");
         }
 
-        if (this.length <= this.arr.length) {
-
-            if (this.length - index >= 0) {
-                System.arraycopy(this.arr, index, this.arr, index + 1, this.length - index);
-            }
-
-            this.arr[index] = element;
-
-        } else {
-            var newArray = (E[]) new Object[this.length * 2];
-
-            if (index >= 0) {
-                System.arraycopy(this.arr, 0, newArray, 0, index);
-            }
-
-            newArray[index] = element;
-
-            if (this.length - (index + 1) >= 0) {
-                System.arraycopy(this.arr, index + 1 - 1, newArray, index + 1, this.length - (index + 1));
-            }
-
-            this.arr = newArray;
+        if (this.length == this.arr.length) {
+            this.arr = resize();
         }
+
+        System.arraycopy(this.arr, index, this.arr, index + 1, this.length - index);
+        this.arr[index] = element;
         this.length++;
 
         return true;
@@ -87,15 +71,13 @@ public class ArrayList<E> implements List<E> {
 
         var element = this.arr[index];
 
-        if (this.size() - index >= 0) System.arraycopy(this.arr, index + 1, this.arr, index, this.size() - index);
+        System.arraycopy(this.arr, index + 1, this.arr, index, this.length - index - 1);
+        this.length--;
+        this.arr[this.length] = null;
 
-        this.arr[this.size()] = null;
-
-        if (this.length == this.arr.length / 2) {
+        if (this.length <= this.arr.length / 4) {
             this.arr = shrink();
         }
-
-        this.length--;
 
         return element;
     }
@@ -107,30 +89,18 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public int indexOf(E element) {
-        int index = -1;
-
-        for (int i = 0; i < this.arr.length; i++) {
-            if (element.equals(this.arr[i])) {
-                index = i;
-                break;
+        for (int i = 0; i < this.length; i++) {
+            if (Objects.equals(element, this.arr[i])) {
+                return i;
             }
         }
 
-        return index;
+        return -1;
     }
 
     @Override
     public boolean contains(E element) {
-        var isContains = false;
-
-        for (int i = 0; i < this.arr.length; i++) {
-            if (this.indexOf(element) != -1) {
-                isContains = true;
-                break;
-            }
-        }
-
-        return isContains;
+        return this.indexOf(element) != -1;
     }
 
     @Override

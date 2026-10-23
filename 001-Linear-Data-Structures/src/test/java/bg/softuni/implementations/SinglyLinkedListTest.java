@@ -85,4 +85,22 @@ public class SinglyLinkedListTest {
         assertFalse(list.isEmpty());
         assertTrue(new SinglyLinkedList<>().isEmpty());
     }
+
+    @Test
+    public void testRemoveLastSingleElement() {
+        SinglyLinkedList<Integer> single = new SinglyLinkedList<>();
+        single.addLast(1);
+
+        assertEquals(Integer.valueOf(1), single.removeLast());
+        assertTrue(single.isEmpty());
+    }
+
+    @Test
+    public void testGetLastAfterAddFirstOnEmptyList() {
+        SinglyLinkedList<Integer> fresh = new SinglyLinkedList<>();
+        fresh.addFirst(5);
+        fresh.addFirst(4);
+
+        assertEquals(Integer.valueOf(5), fresh.getLast());
+    }
 }

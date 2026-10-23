@@ -25,10 +25,10 @@ public class TheMatrixTest {
 
         String str = theMatrix.toOutputString();
         assertEquals(
-                "xxx\r\n" +
-                        "xxx\r\n" +
-                        "xbx\r\n" +
-                        "xbx\r\n" +
+                "xxx" + System.lineSeparator() +
+                        "xxx" + System.lineSeparator() +
+                        "xbx" + System.lineSeparator() +
+                        "xbx" + System.lineSeparator() +
                         "xbx", str);
     }
 
@@ -52,10 +52,10 @@ public class TheMatrixTest {
 
         String str = theMatrix.toOutputString();
         assertEquals(
-                "aaa\r\n" +
-                        "aaa\r\n" +
-                        "axa\r\n" +
-                        "axa\r\n" +
+                "aaa" + System.lineSeparator() +
+                        "aaa" + System.lineSeparator() +
+                        "axa" + System.lineSeparator() +
+                        "axa" + System.lineSeparator() +
                         "axa", str);
     }
 
@@ -78,10 +78,10 @@ public class TheMatrixTest {
 
         String str = theMatrix.toOutputString();
         assertEquals(
-                "oo11oo\r\n" +
-                        "o1331o\r\n" +
-                        "133331\r\n" +
-                        "o1331o\r\n" +
+                "oo11oo" + System.lineSeparator() +
+                        "o1331o" + System.lineSeparator() +
+                        "133331" + System.lineSeparator() +
+                        "o1331o" + System.lineSeparator() +
                         "oo11oo", str);
     }
 
@@ -104,10 +104,10 @@ public class TheMatrixTest {
 
         String str = theMatrix.toOutputString();
         assertEquals(
-                "oooooo\r\n" +
-                        "ooo1oo\r\n" +
-                        "oo1o11\r\n" +
-                        "o11w1z\r\n" +
+                "oooooo" + System.lineSeparator() +
+                        "ooo1oo" + System.lineSeparator() +
+                        "oo1o11" + System.lineSeparator() +
+                        "o11w1z" + System.lineSeparator() +
                         "1zzzzz", str);
     }
 
@@ -130,10 +130,10 @@ public class TheMatrixTest {
 
         String str = theMatrix.toOutputString();
         assertEquals(
-                "z1oo1z\r\n" +
-                        "z1oo1z\r\n" +
-                        "z1111z\r\n" +
-                        "z1zw1z\r\n" +
+                "z1oo1z" + System.lineSeparator() +
+                        "z1oo1z" + System.lineSeparator() +
+                        "z1111z" + System.lineSeparator() +
+                        "z1zw1z" + System.lineSeparator() +
                         "zzzzzz", str);
     }
 }

@@ -64,4 +64,20 @@ public class QueueTest {
             assertEquals(String.valueOf(last++), s);
         }
     }
+
+    @Test
+    public void testPollWhenFullAndIteratorVisitsAll() {
+        Queue<Integer> q = new Queue<>();
+        for (int i = 0; i < 8; i++) {
+            q.offer(i);
+        }
+
+        assertEquals(Integer.valueOf(0), q.poll());
+
+        int count = 0;
+        for (Integer value : q) {
+            assertEquals(Integer.valueOf(++count), value);
+        }
+        assertEquals(7, count);
+    }
 }

@@ -263,4 +263,47 @@ public class ArrayListTest {
 
         assertEquals(values, sb.toString());
     }
+
+    @Test
+    public void testInsertWhenFullAndAtEnd() {
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            list.add(i);
+        }
+        list.add(0, -1);
+        list.add(list.size(), 99);
+
+        assertEquals(6, list.size());
+        assertEquals(Integer.valueOf(-1), list.get(0));
+        assertEquals(Integer.valueOf(3), list.get(4));
+        assertEquals(Integer.valueOf(99), list.get(5));
+    }
+
+    @Test
+    public void testRemoveWhenFull() {
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            list.add(i);
+        }
+
+        assertEquals(Integer.valueOf(1), list.remove(1));
+        assertEquals(Integer.valueOf(3), list.remove(2));
+        assertEquals(2, list.size());
+        assertEquals(Integer.valueOf(0), list.get(0));
+        assertEquals(Integer.valueOf(2), list.get(1));
+    }
+
+    @Test
+    public void testIndexOfIgnoresRemovedSlotsAndHandlesNull() {
+        ArrayList<String> list = new ArrayList<>();
+        list.add("a");
+        list.add(null);
+        list.add("b");
+        list.remove(2);
+
+        assertEquals(1, list.indexOf(null));
+        assertEquals(-1, list.indexOf("b"));
+        assertFalse(list.contains("b"));
+        assertTrue(list.contains("a"));
+    }
 }

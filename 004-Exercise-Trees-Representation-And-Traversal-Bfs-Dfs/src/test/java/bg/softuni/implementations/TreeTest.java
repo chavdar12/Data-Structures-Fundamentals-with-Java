@@ -47,14 +47,14 @@ public class TreeTest {
         TreeFactory treeFactory = new TreeFactory();
         Tree<Integer> tree = treeFactory.createTreeFromStrings(input);
 
-        assertEquals("7\r\n" +
-                "  19\r\n" +
-                "    1\r\n" +
-                "    12\r\n" +
-                "    31\r\n" +
-                "  21\r\n" +
-                "  14\r\n" +
-                "    23\r\n" +
+        assertEquals("7" + System.lineSeparator() +
+                "  19" + System.lineSeparator() +
+                "    1" + System.lineSeparator() +
+                "    12" + System.lineSeparator() +
+                "    31" + System.lineSeparator() +
+                "  21" + System.lineSeparator() +
+                "  14" + System.lineSeparator() +
+                "    23" + System.lineSeparator() +
                 "    6", tree.getAsString());
     }
 
@@ -163,9 +163,7 @@ public class TreeTest {
         List<List<Integer>> expected =
                 List.of(List.of(7, 19, 1), List.of(7, 14, 6));
 
-        for (int i = 0; i < lists.size(); i++) {
-            assertEquals(expected.get(i), lists.get(i));
-        }
+        assertEquals(expected, lists);
     }
 
     @Test

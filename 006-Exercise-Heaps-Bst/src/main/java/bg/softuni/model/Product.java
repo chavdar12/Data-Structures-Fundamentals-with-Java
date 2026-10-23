@@ -43,6 +43,6 @@ public class Product implements Decrease<Product>, Comparable<Product> {
 
     @Override
     public int compareTo(Product other) {
-        return this.getPrice() - other.getPrice();
+        return Integer.compare(this.getPrice(), other.getPrice());
     }
 }

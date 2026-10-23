@@ -12,6 +12,10 @@ public class CookiesProblem {
             cookies.add(cookie);
         }
 
+        if (cookies.isEmpty()) {
+            return -1;
+        }
+
         int operations = 0;
 
         while (cookies.peek() < requiredSweetness) {
