@@ -1,4 +1,4 @@
-subprojects {
+allprojects {
     apply(plugin = "java")
 
     group = "bg.softuni"
